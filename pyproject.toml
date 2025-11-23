@@ -1,0 +1,12 @@
+[project]
+name = "fundamental"
+version = "0.1.0"
+description = "A package for fetching and processing fundamental financial data."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fredapi>=0.5.2",
+    "pyodbc>=5.3.0",
+    "python-dotenv>=1.2.1",
+    "yfinance>=0.2.66",
+]
