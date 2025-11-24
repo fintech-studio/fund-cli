@@ -17,7 +17,9 @@ class ConfigManager:
         if self._initialized:
             return
             
-        self.config_path = os.path.join(os.getcwd(), "config.json")
+        config_dir = os.path.join(os.getcwd(), ".fund")
+        os.makedirs(config_dir, exist_ok=True)
+        self.config_path = os.path.join(config_dir, "config.json")
         self._config_data = self._load_config()
         self._initialized = True
     
