@@ -1,22 +1,16 @@
 import yfinance as yf
 from datetime import datetime
 from fredapi import Fred
-from fund.config.database_config import DatabaseConfig
-
+from fund.config.fred_config import FredConfig
 class FundamentalDataProvider:
-    """基本面數據提供類"""
+    """基本面數據提供類 - 負責從外部 API 獲取數據"""
     def __init__(self):
-        self._initialize_fred()
-
-    def _initialize_fred(self):
-        config = DatabaseConfig()
-        fred_api_key = config.get_fred_key()
+        self.fred_config = FredConfig()
+        fred_api_key = self.fred_config.api_key
         self.fred = Fred(api_key=fred_api_key) if fred_api_key else None
 
     def _ensure_fred_available(self):
-        if not self.fred:
-            self._initialize_fred()
-        if not self.fred:
+        if not self.fred_config.is_configured():
             raise Exception("FRED API Key 未設定")
 
     def get_fundamental_data(self, ticker: str):

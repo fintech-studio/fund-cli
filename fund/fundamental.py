@@ -135,14 +135,15 @@ def main():
 
     # db 子命令 - 資料庫管理
     db_parser = subparsers.add_parser('db', help='資料庫配置與管理')
-
-    # 資料庫配置
     db_parser.add_argument('--host', type=str, help='設定資料庫位址')
     db_parser.add_argument('--database', type=str, help='設定資料庫名稱')
     db_parser.add_argument('--user', type=str, help='設定資料庫使用者名稱')
     db_parser.add_argument('--password', type=str, help='設定資料庫使用者密碼')
     db_parser.add_argument('--driver', type=str, help='設定資料庫驅動程式名稱')
     db_parser.add_argument('--clear', action='store_true', help='清除資料庫設置')
+    db_parser.add_argument('--config', action='store_true', help='顯示資料庫配置')
+    db_parser.add_argument('--check', action='store_true', help='檢查資料庫連線')
+    db_parser.add_argument('--tables',action='store_true',help='列出當前資料庫的資料表')
     
     # fred 子命令 - FRED API 管理
     fred_parser = subparsers.add_parser('fred', help='FRED API 配置')
@@ -269,7 +270,6 @@ def main():
                 result = service.fetch_and_store(symbol, market)
                 print(f"✓ {symbol} 基本面資料已成功儲存")
                 
-                # 使用新的顯示函數
                 display_fundamental_data(symbol, result)
                 
             except Exception as e:
@@ -280,59 +280,88 @@ def main():
         config_service = ConfigService()
         db_service = DatabaseService()
         
+        has_args = any([args.clear, args.host, args.database, args.user, args.password, 
+                       args.driver, args.config, args.check, args.tables])
+        
         if args.clear:
-            confirm = input("Confirm to clear all database settings? (yes/no): ")
-            if confirm.lower() == 'yes':
-                message = config_service.clear_db_config()
-                print(f"✓ {message}")
+            confirm = input("Confirm to clear all database settings? (y/n): ")
+            if confirm.lower() == 'y':
+                ClearMessage = config_service.clear_db_config()
+                print(f"✓ {ClearMessage}")
             else:
                 print("Operation cancelled")
             return
         
         if args.host or args.database or args.user or args.password or args.driver:
-            message = config_service.update_db_config(
+            DBUpdateMessage = config_service.update_db_config(
                 server=args.host,
                 database=args.database,
                 username=args.user,
                 password=args.password,
                 driver=args.driver
             )
-            print(f"✓ {message}")
+            config = config_service.show_db_config()
+            for key, value in config.items():
+                print(f"  {key}: {value}")
+
+            print("\n")
+
+            success, ifDBExitsMessage = db_service.create_database_if_not_exists(config.get('database'))
+            print(f"  {ifDBExitsMessage}")
+            print(f"✓ {DBUpdateMessage}")
         
-        # 顯示配置資訊
-        #print("\n")
-        config = config_service.show_db_config()
-        for key, value in config.items():
-            print(f"  {key}: {value}")
+        if args.config:
+            config = config_service.show_db_config()
+            for key, value in config.items():
+                print(f"  {key}: {value}")
         
-        # 確保資料庫存在
-        print("\n")
-        success, message = db_service.create_database_if_not_exists(config.get('database'))
-        print(f"  {message}")
+        if args.check:
+            success, TestConnectMessage = db_service.test_connection()
+            print(f"  {TestConnectMessage}")
+
+        if args.tables:
+            success, tables = db_service.list_tables()
+            if success and tables:
+                for i, table in enumerate(tables, 1):
+                    print(f"  {i}. {table}")
+            else:
+                print("not available tables.")
         
-        # 測試連線
-        print("\n")
-        success, message = db_service.test_connection()
-        print(f"  {message}")
-        
-        # 列出資料表
-        print("\n")
-        success, tables = db_service.list_tables()
-        if success and tables:
-            for i, table in enumerate(tables, 1):
-                print(f"  {i}. {table}")
-        else:
-            print("not available tables.")
+        if not has_args:
+            # 顯示配置資訊
+            #print("\n")
+            config = config_service.show_db_config()
+            for key, value in config.items():
+                print(f"  {key}: {value}")
+            
+            # 確保資料庫存在
+            print("\n")
+            success, ifDBExitsMessage = db_service.create_database_if_not_exists(config.get('database'))
+            print(f"  {ifDBExitsMessage}")
+            
+            # 測試連線
+            print("\n")
+            success, TestConnectMessage = db_service.test_connection()
+            print(f"  {TestConnectMessage}")
+            
+            # 列出資料表
+            print("\n")
+            success, tables = db_service.list_tables()
+            if success and tables:
+                for i, table in enumerate(tables, 1):
+                    print(f"  {i}. {table}")
+            else:
+                print("not available tables.")
     
     # 處理 fred 子命令 - FRED API 配置
     elif args.command == 'fred':
         config_service = ConfigService()
         
         if args.clear:
-            confirm = input("Confirm to clear FRED API Key? (yes/no): ")
-            if confirm.lower() == 'yes':
-                message = config_service.clear_fred_config()
-                print(f"✓ {message}")
+            confirm = input("Confirm to clear FRED API Key? (y/n): ")
+            if confirm.lower() == 'y':
+                ClearMessage = config_service.clear_fred_config()
+                print(f"✓ {ClearMessage}")
             else:
                 print("Operation cancelled")
             return
@@ -381,6 +410,9 @@ def show_help():
   {colored_text('fund db --password', Colors.GREEN)} {colored_text('<password>', Colors.BLUE)}        Set database password
   {colored_text('fund db --driver', Colors.GREEN)} {colored_text('<driver>', Colors.BLUE)}            Set database driver
   {colored_text('fund db --clear', Colors.GREEN)}                      Clear all database settings
+  {colored_text('fund db --config', Colors.GREEN)}                     Show database configuration
+  {colored_text('fund db --check', Colors.GREEN)}                      Check database connection
+  {colored_text('fund db --tables', Colors.GREEN)}                     Show database tables
 
 {colored_text('FRED API Configuration:', Colors.BOLD + Colors.YELLOW)}
   {colored_text('fund fred --fred', Colors.GREEN)} {colored_text('<API_Key>', Colors.BLUE)}           Set FRED API Key
