@@ -1,6 +1,7 @@
 import yfinance as yf
 from datetime import datetime
 from fredapi import Fred
+import pandas as pd
 from fund.config.fred_config import FredConfig
 class FundamentalDataProvider:
     """基本面數據提供類 - 負責從外部 API 獲取數據"""
@@ -76,7 +77,6 @@ class FundamentalDataProvider:
     def get_cpi_us(self):
         """取得美國CPI資料 (消費者物價指數)"""
         self._ensure_fred_available()
-        import pandas as pd
         cpi_series = self.fred.get_series('CPIAUCSL')
         # 計算年增率與月增率
         yoy_series = cpi_series.pct_change(periods=12) * 100
@@ -95,7 +95,6 @@ class FundamentalDataProvider:
     def get_nfp_us(self):
         """取得美國NFP資料 (非農就業人口)"""
         self._ensure_fred_available()
-        import pandas as pd
         nfp_series = self.fred.get_series('PAYEMS')
         mom_change_series = nfp_series.diff(periods=1)
         yoy_change_series = nfp_series.diff(periods=12)
@@ -112,9 +111,7 @@ class FundamentalDataProvider:
 
     def get_cpi_us_range(self, start_date, end_date):
         """取得美國CPI指定期間資料，並計算年增率與月增率"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
-        import pandas as pd
+        self._ensure_fred_available()
         start = datetime.strptime(start_date, "%Y/%m/%d")
         end = datetime.strptime(end_date, "%Y/%m/%d")
         cpi_series = self.fred.get_series('CPIAUCSL')
@@ -135,9 +132,7 @@ class FundamentalDataProvider:
 
     def get_nfp_us_range(self, start_date, end_date):
         """取得美國NFP指定期間資料，並計算月變化量與年變化量"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
-        import pandas as pd
+        self._ensure_fred_available()
         start = datetime.strptime(start_date, "%Y/%m/%d")
         end = datetime.strptime(end_date, "%Y/%m/%d")
         nfp_series = self.fred.get_series('PAYEMS')
@@ -159,7 +154,6 @@ class FundamentalDataProvider:
     def get_oil_price(self):
         """取得最新WTI原油價格 (DCOILWTICO)"""
         self._ensure_fred_available()
-        import pandas as pd
         oil_series = self.fred.get_series('DCOILWTICO')
         # 過濾掉缺失值
         oil_series = oil_series.dropna()
@@ -173,9 +167,7 @@ class FundamentalDataProvider:
 
     def get_oil_price_range(self, start_date, end_date):
         """取得WTI原油價格指定期間資料 (DCOILWTICO)"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
-        import pandas as pd
+        self._ensure_fred_available()
         start = datetime.strptime(start_date, "%Y/%m/%d")
         end = datetime.strptime(end_date, "%Y/%m/%d")
         oil_series = self.fred.get_series('DCOILWTICO')
@@ -192,7 +184,7 @@ class FundamentalDataProvider:
 
     def get_gold_price(self):
         """取得最新黃金期貨價格 (GC=F)"""
-        import pandas as pd
+        self._ensure_fred_available()
         ticker = yf.Ticker("GC=F")
         hist = ticker.history(period="max")
         hist = hist.dropna(subset=["Close"])
@@ -209,8 +201,7 @@ class FundamentalDataProvider:
 
     def get_gold_price_range(self, start_date, end_date):
         """取得黃金期貨指定期間價格 (GC=F)"""
-        import pandas as pd
-        # 轉換日期格式 yyyy/mm/dd -> yyyy-mm-dd
+        self._ensure_fred_available()
         start = datetime.strptime(start_date, "%Y/%m/%d").strftime("%Y-%m-%d")
         end = datetime.strptime(end_date, "%Y/%m/%d").strftime("%Y-%m-%d")
         ticker = yf.Ticker("GC=F")
