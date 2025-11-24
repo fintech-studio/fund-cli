@@ -1,7 +1,5 @@
 import os
 import json
-
-
 class DatabaseConfig:
     """資料庫配置類"""
 
@@ -45,6 +43,8 @@ class DatabaseConfig:
             json.dump(config_data, f, indent=2, ensure_ascii=False)
 
     def get_connection_string(self):
+        """取得資料庫連線字串"""
+        self._load_config()
         return (
             f"DRIVER={{{self.driver}}};"
             f"SERVER={self.server};"
@@ -55,6 +55,7 @@ class DatabaseConfig:
 
     def get_master_connection_string(self):
         """取得連接到 master 資料庫的連線字串"""
+        self._load_config()
         return (
             f"DRIVER={{{self.driver}}};"
             f"SERVER={self.server};"

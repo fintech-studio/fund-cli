@@ -305,6 +305,11 @@ def main():
         for key, value in config.items():
             print(f"  {key}: {value}")
         
+        # 確保資料庫存在
+        print("\n")
+        success, message = db_service.create_database_if_not_exists(config.get('database'))
+        print(f"  {message}")
+        
         # 測試連線
         print("\n")
         success, message = db_service.test_connection()
