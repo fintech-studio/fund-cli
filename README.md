@@ -31,7 +31,6 @@
 
 ### 環境需求
 - Python 3.12+
-- SQL Server (用於資料儲存)
 - FRED API Key (用於經濟指標查詢)
 
 ### 安裝
