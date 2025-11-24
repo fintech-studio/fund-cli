@@ -405,7 +405,7 @@ def show_help():
 
 {colored_text('Database Configuration:', Colors.BOLD + Colors.YELLOW)}
   {colored_text('fund db --host', Colors.GREEN)} {colored_text('<address>', Colors.BLUE)}             Set database host
-  {colored_text('fund db --database', Colors.GREEN)} {colored_text('<name>', Colors.BLUE)}            Set database name
+  {colored_text('fund db --database', Colors.GREEN)} {colored_text('<name>', Colors.BLUE)}            Set database name (if database does not exist, it will be created)
   {colored_text('fund db --user', Colors.GREEN)} {colored_text('<username>', Colors.BLUE)}            Set database username
   {colored_text('fund db --password', Colors.GREEN)} {colored_text('<password>', Colors.BLUE)}        Set database password
   {colored_text('fund db --driver', Colors.GREEN)} {colored_text('<driver>', Colors.BLUE)}            Set database driver
