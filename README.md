@@ -49,7 +49,6 @@ fund [command] [options]
 ### 查看詳細說明
 ```powershell
 fund
-or
 fund help
 ```
 ## 📊 輸出範例
