@@ -1,5 +1,5 @@
 import pyodbc
-from config.database_config import DatabaseConfig
+from fund.config.database_config import DatabaseConfig
 
 class FundamentalDataRepository:
     """基本面數據儲存庫類"""

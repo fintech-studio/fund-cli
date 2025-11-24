@@ -1,5 +1,5 @@
-from providers.fundamental_data_provider import FundamentalDataProvider
-from repositories.fundamental_data_repository import FundamentalDataRepository
+from fund.providers.fundamental_data_provider import FundamentalDataProvider
+from fund.repositories.fundamental_data_repository import FundamentalDataRepository
 
 class FundamentalDataService:
     """基本面數據服務類"""

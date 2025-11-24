@@ -1,3 +1,5 @@
 .env.local
 __pycache__/
 .venv/
+fundamental.egg-info/
+dist/

@@ -1,15 +1,23 @@
 import yfinance as yf
 from datetime import datetime
 from fredapi import Fred
-import os
-from dotenv import load_dotenv
+from fund.config.database_config import DatabaseConfig
 
 class FundamentalDataProvider:
     """基本面數據提供類"""
     def __init__(self):
-        load_dotenv(dotenv_path=".env.local")
-        fred_api_key = os.getenv("FRED_API_KEY")
+        self._initialize_fred()
+
+    def _initialize_fred(self):
+        config = DatabaseConfig()
+        fred_api_key = config.get_fred_key()
         self.fred = Fred(api_key=fred_api_key) if fred_api_key else None
+
+    def _ensure_fred_available(self):
+        if not self.fred:
+            self._initialize_fred()
+        if not self.fred:
+            raise Exception("FRED API Key 未設定")
 
     def get_fundamental_data(self, ticker: str):
         stock = yf.Ticker(ticker)
@@ -73,8 +81,7 @@ class FundamentalDataProvider:
 
     def get_cpi_us(self):
         """取得美國CPI資料 (消費者物價指數)"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
+        self._ensure_fred_available()
         import pandas as pd
         cpi_series = self.fred.get_series('CPIAUCSL')
         # 計算年增率與月增率
@@ -93,8 +100,7 @@ class FundamentalDataProvider:
 
     def get_nfp_us(self):
         """取得美國NFP資料 (非農就業人口)"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
+        self._ensure_fred_available()
         import pandas as pd
         nfp_series = self.fred.get_series('PAYEMS')
         mom_change_series = nfp_series.diff(periods=1)
@@ -158,8 +164,7 @@ class FundamentalDataProvider:
 
     def get_oil_price(self):
         """取得最新WTI原油價格 (DCOILWTICO)"""
-        if not self.fred:
-            raise Exception("FRED API Key 未設定")
+        self._ensure_fred_available()
         import pandas as pd
         oil_series = self.fred.get_series('DCOILWTICO')
         # 過濾掉缺失值
