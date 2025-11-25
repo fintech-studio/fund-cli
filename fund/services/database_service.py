@@ -13,7 +13,6 @@ class DatabaseService:
             with pyodbc.connect(master_conn_str, autocommit=True) as conn:
                 cursor = conn.cursor()
                 cursor.execute(f"IF DB_ID(N'{database_name}') IS NULL CREATE DATABASE [{database_name}]")
-                conn.commit()
                 return True, f"Database '{database_name}' ensured to exist."
         except Exception as e:
             return False, f"Failed to create database '{database_name}': {str(e)}"
@@ -26,7 +25,6 @@ class DatabaseService:
                 cursor = conn.cursor()
                 cursor.execute("SELECT @@VERSION")
                 version = cursor.fetchone()[0]
-                conn.commit()
                 return True, f"connection successful!\nSQL Server version: {version}"
         except Exception as e:
             return False, f"connection failed: {str(e)}"
@@ -44,7 +42,6 @@ class DatabaseService:
                     ORDER BY TABLE_NAME
                 """)
                 tables = [row[0] for row in cursor.fetchall()]
-                conn.commit()
                 return True, tables
         except Exception as e:
             return False, str(e)
@@ -71,7 +68,6 @@ class DatabaseService:
                     ORDER BY ORDINAL_POSITION
                 """)
                 columns = cursor.fetchall()
-                conn.commit()
                 return True, {
                     'count': count,
                     'last_update': last_update,
