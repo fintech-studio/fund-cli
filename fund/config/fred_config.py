@@ -1,4 +1,4 @@
-from fund.config.config_manager import ConfigManager
+from fund.config.config_manage import ConfigManager
 
 class FredConfig:
     """FRED 配置類 - 提供 FRED API 配置介面"""

@@ -1,4 +1,4 @@
-from fund.config.config_manager import ConfigManager
+from fund.config.config_manage import ConfigManager
 
 class DatabaseConfig:
     """資料庫配置類 - 提供資料庫配置介面"""
