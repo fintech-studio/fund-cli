@@ -286,14 +286,14 @@ def main():
         if args.clear:
             confirm = input("Confirm to clear all database settings? (y/n): ")
             if confirm.lower() == 'y':
-                ClearMessage = config_service.clear_db_config()
-                print(f"✓ {ClearMessage}")
+                clear_message = config_service.clear_db_config()
+                print(f"✓ {clear_message}")
             else:
                 print("Operation cancelled")
             return
         
         if args.host or args.database or args.user or args.password or args.driver:
-            DBUpdateMessage = config_service.update_db_config(
+            db_update_message = config_service.update_db_config(
                 server=args.host,
                 database=args.database,
                 username=args.user,
@@ -306,9 +306,9 @@ def main():
 
             print("\n")
 
-            success, ifDBExitsMessage = db_service.create_database_if_not_exists(config.get('database'))
-            print(f"  {ifDBExitsMessage}")
-            print(f"✓ {DBUpdateMessage}")
+            success, if_db_exists_message = db_service.create_database_if_not_exists(config.get('database'))
+            print(f"  {if_db_exists_message}")
+            print(f"✓ {db_update_message}")
         
         if args.config:
             config = config_service.show_db_config()
@@ -316,8 +316,8 @@ def main():
                 print(f"  {key}: {value}")
         
         if args.check:
-            success, TestConnectMessage = db_service.test_connection()
-            print(f"  {TestConnectMessage}")
+            success, test_connect_message = db_service.test_connection()
+            print(f"  {test_connect_message}")
 
         if args.tables:
             success, tables = db_service.list_tables()
@@ -336,13 +336,13 @@ def main():
             
             # 確保資料庫存在
             print("\n")
-            success, ifDBExitsMessage = db_service.create_database_if_not_exists(config.get('database'))
-            print(f"  {ifDBExitsMessage}")
+            success, if_db_exists_message = db_service.create_database_if_not_exists(config.get('database'))
+            print(f"  {if_db_exists_message}")
             
             # 測試連線
             print("\n")
-            success, TestConnectMessage = db_service.test_connection()
-            print(f"  {TestConnectMessage}")
+            success, test_connect_message = db_service.test_connection()
+            print(f"  {test_connect_message}")
             
             # 列出資料表
             print("\n")
@@ -360,15 +360,15 @@ def main():
         if args.clear:
             confirm = input("Confirm to clear FRED API Key? (y/n): ")
             if confirm.lower() == 'y':
-                ClearMessage = config_service.clear_fred_config()
-                print(f"✓ {ClearMessage}")
+                clear_message = config_service.clear_fred_config()
+                print(f"✓ {clear_message}")
             else:
                 print("Operation cancelled")
             return
         
         if args.fred:
-            message = config_service.update_fred_config(args.fred)
-            print(f"✓ {message}")
+            fred_update_message = config_service.update_fred_config(args.fred)
+            print(f"✓ {fred_update_message}")
         
         # 顯示 FRED API 配置
         #print("\n")
