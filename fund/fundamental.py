@@ -47,7 +47,7 @@ def display_fundamental_data(symbol, data):
     print(f"{'='*60}")
     
     # 基本資訊
-    print("\n📊 基本資訊:")
+    print("\n 基本資訊:")
     print(f"  產業: {data.get('industry', 'N/A')}")
     print(f"  板塊: {data.get('sector', 'N/A')}")
     print(f"  國家: {data.get('country', 'N/A')}")
@@ -55,7 +55,7 @@ def display_fundamental_data(symbol, data):
     print(f"  貨幣: {data.get('currency', 'N/A')}")
     
     # 估值指標
-    print("\n💰 估值指標:")
+    print("\n 估值指標:")
     print(f"  市值: {format_number(data.get('marketCap'), 'currency')}")
     print(f"  本益比 (P/E): {format_number(data.get('trailingPE'), 'ratio')}")
     print(f"  預估本益比: {format_number(data.get('forwardPE'), 'ratio')}")
@@ -64,7 +64,7 @@ def display_fundamental_data(symbol, data):
     print(f"  PEG比率: {format_number(data.get('pegRatio'), 'ratio')}")
     
     # 財務健康度
-    print("\n🏥 財務健康度:")
+    print("\n 財務健康度:")
     print(f"  負債權益比: {format_number(data.get('debtToEquity'), 'ratio')}")
     print(f"  流動比率: {format_number(data.get('currentRatio'), 'ratio')}")
     print(f"  速動比率: {format_number(data.get('quickRatio'), 'ratio')}")
@@ -72,7 +72,7 @@ def display_fundamental_data(symbol, data):
     print(f"  總負債: {format_number(data.get('totalDebt'), 'currency')}")
     
     # 獲利能力
-    print("\n📈 獲利能力:")
+    print("\n 獲利能力:")
     print(f"  股東權益報酬率 (ROE): {format_number(data.get('returnOnEquity'), 'percentage')}")
     print(f"  資產報酬率 (ROA): {format_number(data.get('returnOnAssets'), 'percentage')}")
     print(f"  淨利率: {format_number(data.get('profitMargins'), 'percentage')}")
@@ -80,20 +80,20 @@ def display_fundamental_data(symbol, data):
     print(f"  毛利率: {format_number(data.get('grossMargins'), 'percentage')}")
     
     # 成長性
-    print("\n🚀 成長性:")
+    print("\n 成長性:")
     print(f"  營收成長率: {format_number(data.get('revenueGrowth'), 'percentage')}")
     print(f"  盈餘成長率: {format_number(data.get('earningsGrowth'), 'percentage')}")
     print(f"  總營收: {format_number(data.get('totalRevenue'), 'currency')}")
     
     # 股利資訊
-    print("\n💵 股利資訊:")
+    print("\n 股利資訊:")
     print(f"  股利率: {format_number(data.get('dividendYield'), 'percentage')}")
     print(f"  股利金額: {format_number(data.get('dividendRate'), 'ratio')}")
     print(f"  配息率: {format_number(data.get('payoutRatio'), 'percentage')}")
     print(f"  除息日: {data.get('exDividendDate', 'N/A')}")
     
     # 股票資訊
-    print("\n📊 股票資訊:")
+    print("\n 股票資訊:")
     print(f"  Beta值: {format_number(data.get('beta'), 'ratio')}")
     print(f"  每股淨值: {format_number(data.get('bookValue'), 'ratio')}")
     print(f"  52週最高: {format_number(data.get('fiftyTwoWeekHigh'), 'ratio')}")
@@ -130,8 +130,8 @@ def main():
     add_parser.add_argument('--gold', action='store_true', help='查詢黃金期貨價格')
 
     # 日期範圍選項
-    add_parser.add_argument('--start_date', type=str, help='查詢起始日期 (yyyy/mm/dd)')
-    add_parser.add_argument('--end_date', type=str, help='查詢結束日期 (yyyy/mm/dd)')
+    add_parser.add_argument('--start', type=str, help='查詢起始日期 (yyyy/mm/dd)')
+    add_parser.add_argument('--end', type=str, help='查詢結束日期 (yyyy/mm/dd)')
 
     # db 子命令 - 資料庫管理
     db_parser = subparsers.add_parser('db', help='資料庫配置與管理')
@@ -164,9 +164,9 @@ def main():
         # CPI/NFP/OIL/GOLD 查詢
         if args.cpi:
             try:
-                if args.start_date and args.end_date:
-                    print(f"正在獲取美國CPI期間資料: {args.start_date} ~ {args.end_date}")
-                    cpi_list = service.fetch_and_store_cpi_us_range(args.start_date, args.end_date)
+                if args.start and args.end:
+                    print(f"正在獲取美國CPI期間資料: {args.start} ~ {args.end}")
+                    cpi_list = service.fetch_and_store_cpi_us_range(args.start, args.end)
                     print("✓ 美國CPI期間資料:")
                     for cpi_data in cpi_list:
                         print(f"  日期={cpi_data['date']} 數值={cpi_data['value']}（指數）")
@@ -182,9 +182,9 @@ def main():
 
         if args.nfp:
             try:
-                if args.start_date and args.end_date:
-                    print(f"正在獲取美國NFP期間資料: {args.start_date} ~ {args.end_date}")
-                    nfp_list = service.fetch_and_store_nfp_us_range(args.start_date, args.end_date)
+                if args.start and args.end:
+                    print(f"正在獲取美國NFP期間資料: {args.start} ~ {args.end}")
+                    nfp_list = service.fetch_and_store_nfp_us_range(args.start, args.end)
                     print("✓ 美國NFP期間資料:")
                     for nfp_data in nfp_list:
                         print(f"  日期={nfp_data['date']} 數值={nfp_data['value']}（千人）")
@@ -200,9 +200,9 @@ def main():
 
         if args.oil:
             try:
-                if args.start_date and args.end_date:
-                    print(f"正在獲取WTI原油價格期間資料: {args.start_date} ~ {args.end_date}")
-                    oil_list = service.fetch_and_store_oil_price_range(args.start_date, args.end_date)
+                if args.start and args.end:
+                    print(f"正在獲取WTI原油價格期間資料: {args.start} ~ {args.end}")
+                    oil_list = service.fetch_and_store_oil_price_range(args.start, args.end)
                     print("✓ WTI原油價格期間資料:")
                     for oil_data in oil_list:
                         print(f"  日期={oil_data['date']} 價格={oil_data['value']} (USD)")
@@ -218,9 +218,9 @@ def main():
 
         if args.gold:
             try:
-                if args.start_date and args.end_date:
-                    print(f"正在獲取黃金期貨價格期間資料: {args.start_date} ~ {args.end_date}")
-                    gold_list = service.fetch_and_store_gold_price_range(args.start_date, args.end_date)
+                if args.start and args.end:
+                    print(f"正在獲取黃金期貨價格期間資料: {args.start} ~ {args.end}")
+                    gold_list = service.fetch_and_store_gold_price_range(args.start, args.end)
                     print("✓ 黃金期貨價格期間資料:")
                     for gold_data in gold_list:
                         print(f"  日期={gold_data['date']} 價格={gold_data['value']} (USD)")
@@ -434,7 +434,7 @@ def show_help():
   {colored_text('fund add 2330 --tw', Colors.GREEN)}
   
   {colored_text('# Query economic indicators', Colors.GRAY)}
-  {colored_text('fund add --cpi --start_date 2008/08/01 --end_date 2025/10/01', Colors.GREEN)}
+  {colored_text('fund add --cpi --start 2008/08/01 --end 2025/10/01', Colors.GREEN)}
   {colored_text('fund add --nfp', Colors.GREEN)}
   {colored_text('fund add --oil', Colors.GREEN)}
   {colored_text('fund add --gold', Colors.GREEN)}
