@@ -86,7 +86,7 @@ class FundamentalDataProvider:
         yoy = yoy_series.iloc[-1]
         mom = mom_series.iloc[-1]
         return {
-            'date': latest_date.strftime("%Y/%m/%d"),
+            'date': latest_date.strftime("%Y-%m-%d"),
             'value': float(latest_value),
             'YoY(%)': float(yoy) if pd.notnull(yoy) else None,
             'MoM(%)': float(mom) if pd.notnull(mom) else None
@@ -103,7 +103,7 @@ class FundamentalDataProvider:
         mom_change = mom_change_series.iloc[-1]
         yoy_change = yoy_change_series.iloc[-1]
         return {
-            'date': latest_date.strftime("%Y/%m/%d"),
+            'date': latest_date.strftime("%Y-%m-%d"),
             'value': float(latest_value),
             'MoM_Change': float(mom_change) if pd.notnull(mom_change) else None,
             'YoY_Change': float(yoy_change) if pd.notnull(yoy_change) else None
@@ -112,8 +112,8 @@ class FundamentalDataProvider:
     def get_cpi_us_range(self, start_date, end_date):
         """取得美國CPI指定期間資料，並計算年增率與月增率"""
         self._ensure_fred_available()
-        start = datetime.strptime(start_date, "%Y/%m/%d")
-        end = datetime.strptime(end_date, "%Y/%m/%d")
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
         cpi_series = self.fred.get_series('CPIAUCSL')
         yoy_series = cpi_series.pct_change(periods=12) * 100
         mom_series = cpi_series.pct_change(periods=1) * 100
@@ -123,7 +123,7 @@ class FundamentalDataProvider:
             yoy = yoy_series.get(date, None)
             mom = mom_series.get(date, None)
             result.append({
-                'date': date.strftime("%Y/%m/%d"),
+                'date': date.strftime("%Y-%m-%d"),
                 'value': float(value),
                 'YoY(%)': float(yoy) if pd.notnull(yoy) else None,
                 'MoM(%)': float(mom) if pd.notnull(mom) else None
@@ -133,8 +133,8 @@ class FundamentalDataProvider:
     def get_nfp_us_range(self, start_date, end_date):
         """取得美國NFP指定期間資料，並計算月變化量與年變化量"""
         self._ensure_fred_available()
-        start = datetime.strptime(start_date, "%Y/%m/%d")
-        end = datetime.strptime(end_date, "%Y/%m/%d")
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
         nfp_series = self.fred.get_series('PAYEMS')
         mom_change_series = nfp_series.diff(periods=1)
         yoy_change_series = nfp_series.diff(periods=12)
@@ -144,7 +144,7 @@ class FundamentalDataProvider:
             mom_change = mom_change_series.get(date, None)
             yoy_change = yoy_change_series.get(date, None)
             result.append({
-                'date': date.strftime("%Y/%m/%d"),
+                'date': date.strftime("%Y-%m-%d"),
                 'value': float(value),
                 'MoM_Change': float(mom_change) if pd.notnull(mom_change) else None,
                 'YoY_Change': float(yoy_change) if pd.notnull(yoy_change) else None
@@ -160,7 +160,7 @@ class FundamentalDataProvider:
         latest_date = oil_series.index[-1]
         latest_value = oil_series.iloc[-1]
         return {
-            'date': latest_date.strftime("%Y/%m/%d"),
+            'date': latest_date.strftime("%Y-%m-%d"),
             'symbol': 'DCOILWTICO',
             'value': float(latest_value)
         }
@@ -168,15 +168,15 @@ class FundamentalDataProvider:
     def get_oil_price_range(self, start_date, end_date):
         """取得WTI原油價格指定期間資料 (DCOILWTICO)"""
         self._ensure_fred_available()
-        start = datetime.strptime(start_date, "%Y/%m/%d")
-        end = datetime.strptime(end_date, "%Y/%m/%d")
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
         oil_series = self.fred.get_series('DCOILWTICO')
         oil_series = oil_series.dropna()
         filtered = oil_series[(oil_series.index >= start) & (oil_series.index <= end)]
         result = []
         for date, value in filtered.items():
             result.append({
-                'date': date.strftime("%Y/%m/%d"),
+                'date': date.strftime("%Y-%m-%d"),
                 'symbol': 'DCOILWTICO',
                 'value': float(value)
             })
@@ -188,13 +188,11 @@ class FundamentalDataProvider:
         ticker = yf.Ticker("GC=F")
         hist = ticker.history(period="max")
         hist = hist.dropna(subset=["Close"])
-        if hist.empty:
-            raise Exception("無法取得黃金期貨價格")
         latest_row = hist.iloc[-1]
         latest_date = hist.index[-1]
         latest_value = latest_row["Close"]
         return {
-            'date': latest_date.strftime("%Y/%m/%d"),
+            'date': latest_date.strftime("%Y-%m-%d"),
             'symbol': 'GC=F',
             'value': float(latest_value)
         }
@@ -202,15 +200,15 @@ class FundamentalDataProvider:
     def get_gold_price_range(self, start_date, end_date):
         """取得黃金期貨指定期間價格 (GC=F)"""
         self._ensure_fred_available()
-        start = datetime.strptime(start_date, "%Y/%m/%d").strftime("%Y-%m-%d")
-        end = datetime.strptime(end_date, "%Y/%m/%d").strftime("%Y-%m-%d")
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
         ticker = yf.Ticker("GC=F")
         hist = ticker.history(start=start, end=end)
         hist = hist.dropna(subset=["Close"])
         result = []
         for date, row in hist.iterrows():
             result.append({
-                'date': date.strftime("%Y/%m/%d"),
+                'date': date.strftime("%Y-%m-%d"),
                 'symbol': 'GC=F',
                 'value': float(row["Close"])
             })
