@@ -130,8 +130,8 @@ def main():
     add_parser.add_argument('--gold', action='store_true', help='查詢黃金期貨價格')
 
     # 日期範圍選項
-    add_parser.add_argument('--start', type=str, help='查詢起始日期 (yyyy/mm/dd)')
-    add_parser.add_argument('--end', type=str, help='查詢結束日期 (yyyy/mm/dd)')
+    add_parser.add_argument('--start', type=str, help='查詢起始日期 (yyyy-mm-dd)')
+    add_parser.add_argument('--end', type=str, help='查詢結束日期 (yyyy-mm-dd)')
 
     # db 子命令 - 資料庫管理
     db_parser = subparsers.add_parser('db', help='資料庫配置與管理')
@@ -434,7 +434,7 @@ def show_help():
   {colored_text('fund add 2330 --tw', Colors.GREEN)}
   
   {colored_text('# Query economic indicators', Colors.GRAY)}
-  {colored_text('fund add --cpi --start 2008/08/01 --end 2025/10/01', Colors.GREEN)}
+  {colored_text('fund add --cpi --start 2008-08-01 --end 2025-10-01', Colors.GREEN)}
   {colored_text('fund add --nfp', Colors.GREEN)}
   {colored_text('fund add --oil', Colors.GREEN)}
   {colored_text('fund add --gold', Colors.GREEN)}
