@@ -11,6 +11,3 @@ dependencies = [
 ]
 [project.scripts]
 fund = "fund.fundamental:main"
-
-[tool.setuptools]
-packages = ["fund","fund.config","fund.services","fund.repositories","fund.providers"]
