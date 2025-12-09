@@ -2,22 +2,7 @@ import argparse
 from fund.services.config_service import ConfigService
 from fund.services.database_service import DatabaseService
 from fund.services.fundamental_data_service import FundamentalDataService
-
-# ANSI 顏色碼
-class Colors:
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    GRAY = '\033[90m'
-
-def colored_text(text, color):
-    return f"{color}{text}{Colors.RESET}"
+from fund.utils.colors import Colors
 
 def format_number(value, format_type='general'):
     """格式化數字顯示"""
@@ -379,64 +364,64 @@ def main():
 def show_help():
     """幫助訊息"""
     help_text = f"""
-{colored_text('Fundamental Analysis System', Colors.BOLD + Colors.CYAN)}
+{Colors.colorize('Fundamental Analysis System', Colors.BOLD + Colors.CYAN)}
 
-{colored_text('Basic Usage:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('fund', Colors.GREEN)} {colored_text('[command]', Colors.BLUE)} {colored_text('[options]', Colors.MAGENTA)}
+{Colors.colorize('Basic Usage:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('fund', Colors.GREEN)} {Colors.colorize('[command]', Colors.BLUE)} {Colors.colorize('[options]', Colors.MAGENTA)}
 
-{colored_text('Subcommands:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('fund add', Colors.GREEN)}                             Query and store fundamental data
-  {colored_text('fund db', Colors.GREEN)}                              Database configuration and management
-  {colored_text('fund fred', Colors.GREEN)}                            FRED API configuration
+{Colors.colorize('Subcommands:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('fund add', Colors.GREEN)}                             Query and store fundamental data
+  {Colors.colorize('fund db', Colors.GREEN)}                              Database configuration and management
+  {Colors.colorize('fund fred', Colors.GREEN)}                            FRED API configuration
 
-{colored_text('Fundamental Data Query:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('fund add', Colors.GREEN)} {colored_text('<stock_symbol>', Colors.BLUE)} {colored_text('--<market>', Colors.MAGENTA)}   Query stock fundamental data
-  {colored_text('fund add --cpi', Colors.GREEN)}                       Query US CPI
-  {colored_text('fund add --nfp', Colors.GREEN)}                       Query US NFP
-  {colored_text('fund add --oil', Colors.GREEN)}                       Query WTI Oil Price
-  {colored_text('fund add --gold', Colors.GREEN)}                      Query Gold Futures Price
+{Colors.colorize('Fundamental Data Query:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('fund add', Colors.GREEN)} {Colors.colorize('<stock_symbol>', Colors.BLUE)} {Colors.colorize('--<market>', Colors.MAGENTA)}   Query stock fundamental data
+  {Colors.colorize('fund add --cpi', Colors.GREEN)}                       Query US CPI
+  {Colors.colorize('fund add --nfp', Colors.GREEN)}                       Query US NFP
+  {Colors.colorize('fund add --oil', Colors.GREEN)}                       Query WTI Oil Price
+  {Colors.colorize('fund add --gold', Colors.GREEN)}                      Query Gold Futures Price
 
-{colored_text('Market Options:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('--tw', Colors.MAGENTA)}        Taiwan Stock Exchange
-  {colored_text('--two', Colors.MAGENTA)}       Taiwan OTC Exchange
-  {colored_text('--us', Colors.MAGENTA)}        US Stock Market
-  {colored_text('--forex', Colors.MAGENTA)}     Foreign Exchange
-  {colored_text('--crypto', Colors.MAGENTA)}    Cryptocurrency
+{Colors.colorize('Market Options:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('--tw', Colors.MAGENTA)}        Taiwan Stock Exchange
+  {Colors.colorize('--two', Colors.MAGENTA)}       Taiwan OTC Exchange
+  {Colors.colorize('--us', Colors.MAGENTA)}        US Stock Market
+  {Colors.colorize('--forex', Colors.MAGENTA)}     Foreign Exchange
+  {Colors.colorize('--crypto', Colors.MAGENTA)}    Cryptocurrency
 
-{colored_text('Database Configuration:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('fund db --host', Colors.GREEN)} {colored_text('<address>', Colors.BLUE)}             Set database host
-  {colored_text('fund db --database', Colors.GREEN)} {colored_text('<name>', Colors.BLUE)}            Set database name (if database does not exist, it will be created)
-  {colored_text('fund db --user', Colors.GREEN)} {colored_text('<username>', Colors.BLUE)}            Set database username
-  {colored_text('fund db --password', Colors.GREEN)} {colored_text('<password>', Colors.BLUE)}        Set database password
-  {colored_text('fund db --driver', Colors.GREEN)} {colored_text('<driver>', Colors.BLUE)}            Set database driver
-  {colored_text('fund db --clear', Colors.GREEN)}                      Clear all database settings
-  {colored_text('fund db --config', Colors.GREEN)}                     Show database configuration
-  {colored_text('fund db --check', Colors.GREEN)}                      Check database connection
-  {colored_text('fund db --tables', Colors.GREEN)}                     Show database tables
+{Colors.colorize('Database Configuration:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('fund db --host', Colors.GREEN)} {Colors.colorize('<address>', Colors.BLUE)}             Set database host
+  {Colors.colorize('fund db --database', Colors.GREEN)} {Colors.colorize('<name>', Colors.BLUE)}            Set database name (if database does not exist, it will be created)
+  {Colors.colorize('fund db --user', Colors.GREEN)} {Colors.colorize('<username>', Colors.BLUE)}            Set database username
+  {Colors.colorize('fund db --password', Colors.GREEN)} {Colors.colorize('<password>', Colors.BLUE)}        Set database password
+  {Colors.colorize('fund db --driver', Colors.GREEN)} {Colors.colorize('<driver>', Colors.BLUE)}            Set database driver
+  {Colors.colorize('fund db --clear', Colors.GREEN)}                      Clear all database settings
+  {Colors.colorize('fund db --config', Colors.GREEN)}                     Show database configuration
+  {Colors.colorize('fund db --check', Colors.GREEN)}                      Check database connection
+  {Colors.colorize('fund db --tables', Colors.GREEN)}                     Show database tables
 
-{colored_text('FRED API Configuration:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('fund fred --fred', Colors.GREEN)} {colored_text('<API_Key>', Colors.BLUE)}           Set FRED API Key
-  {colored_text('fund fred --clear', Colors.GREEN)}                    Clear FRED API Key
+{Colors.colorize('FRED API Configuration:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('fund fred --fred', Colors.GREEN)} {Colors.colorize('<API_Key>', Colors.BLUE)}           Set FRED API Key
+  {Colors.colorize('fund fred --clear', Colors.GREEN)}                    Clear FRED API Key
 
-{colored_text('Usage Examples:', Colors.BOLD + Colors.YELLOW)}
-  {colored_text('# Configure database', Colors.GRAY)}
-  {colored_text('fund db --host localhost --database FundDB --user sa --password YourPassword', Colors.GREEN)}
+{Colors.colorize('Usage Examples:', Colors.BOLD + Colors.YELLOW)}
+  {Colors.colorize('# Configure database', Colors.GRAY)}
+  {Colors.colorize('fund db --host localhost --database FundDB --user sa --password YourPassword', Colors.GREEN)}
   
-  {colored_text('# Configure FRED API', Colors.GRAY)}
-  {colored_text('fund fred --fred your_fred_api_key_here', Colors.GREEN)}
+  {Colors.colorize('# Configure FRED API', Colors.GRAY)}
+  {Colors.colorize('fund fred --fred your_fred_api_key_here', Colors.GREEN)}
   
-  {colored_text('# View configuration', Colors.GRAY)}
-  {colored_text('fund db', Colors.GREEN)}
-  {colored_text('fund fred', Colors.GREEN)}
+  {Colors.colorize('# View configuration', Colors.GRAY)}
+  {Colors.colorize('fund db', Colors.GREEN)}
+  {Colors.colorize('fund fred', Colors.GREEN)}
   
-  {colored_text('# Query stocks', Colors.GRAY)}
-  {colored_text('fund add AAPL --us', Colors.GREEN)}
-  {colored_text('fund add 2330 --tw', Colors.GREEN)}
+  {Colors.colorize('# Query stocks', Colors.GRAY)}
+  {Colors.colorize('fund add AAPL --us', Colors.GREEN)}
+  {Colors.colorize('fund add 2330 --tw', Colors.GREEN)}
   
-  {colored_text('# Query economic indicators', Colors.GRAY)}
-  {colored_text('fund add --cpi --start 2008-08-01 --end 2025-10-01', Colors.GREEN)}
-  {colored_text('fund add --nfp', Colors.GREEN)}
-  {colored_text('fund add --oil', Colors.GREEN)}
-  {colored_text('fund add --gold', Colors.GREEN)}
+  {Colors.colorize('# Query economic indicators', Colors.GRAY)}
+  {Colors.colorize('fund add --cpi --start 2008-08-01 --end 2025-10-01', Colors.GREEN)}
+  {Colors.colorize('fund add --nfp', Colors.GREEN)}
+  {Colors.colorize('fund add --oil', Colors.GREEN)}
+  {Colors.colorize('fund add --gold', Colors.GREEN)}
 """
     print(help_text)
