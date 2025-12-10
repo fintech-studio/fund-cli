@@ -387,7 +387,10 @@ def show_help():
   {colorize('--us', Colors.MAGENTA)}        US Stock Market
   {colorize('--forex', Colors.MAGENTA)}     Foreign Exchange
   {colorize('--crypto', Colors.MAGENTA)}    Cryptocurrency
-
+  
+{colorize('Date Range Options:', Colors.BOLD + Colors.YELLOW)}
+  {colorize('--start', Colors.MAGENTA)} {colorize('<date>', Colors.BLUE)}       Start date (YYYY-MM-DD format)
+  {colorize('--end', Colors.MAGENTA)} {colorize('<date>', Colors.BLUE)}         End date (YYYY-MM-DD format)
 {colorize('Database Configuration:', Colors.BOLD + Colors.YELLOW)}
   {colorize('fund db --host', Colors.GREEN)} {colorize('<address>', Colors.BLUE)}             Set database host
   {colorize('fund db --database', Colors.GREEN)} {colorize('<name>', Colors.BLUE)}            Set database name (if database does not exist, it will be created)
